@@ -2,17 +2,30 @@
 
 import { useRouter } from "next/navigation";
 import { Select } from "@/components/Select";
-import { useState } from "react";
-import { MOCK_CANDIDATES } from "../page";
+import { useEffect, useState } from "react";
+import { Candidate } from "@/types";
 
 export default function AddVote() {
     const router = useRouter();
 
+    const [candidates, setCandidates] = useState<Candidate[] | []>([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await fetch("/api");
+            const data = await response.json();
+            console.log("response", data);
+            setCandidates(data);
+        };
+
+        fetchData();
+    }, []);
+
     // State to store the selected votes for each dropdown
-    const [votes, setVotes] = useState<(number | null)[]>(Array(4).fill(null));
+    const [votes, setVotes] = useState<(string | null)[]>(Array(4).fill(null));
 
     // Function to handle changing votes
-    const handleChange = (index: number, value: number) => {
+    const handleChange = (index: number, value: string) => {
         const newVotes = [...votes];
         newVotes[index] = value;
         setVotes(newVotes);
@@ -43,17 +56,20 @@ export default function AddVote() {
                     <div key={index} className='mb-6'>
                         <Select
                             label={`Vote #${index + 1}`}
-                            options={MOCK_CANDIDATES.filter(
-                                (candidate) =>
-                                    !votes.includes(candidate.id) ||
-                                    candidate.id === selectedVote
-                            ).sort((a, b) => b.votes - a.votes)}
+                            options={candidates
+                                .filter(
+                                    (candidate) =>
+                                        !votes.includes(candidate._id) ||
+                                        candidate._id === selectedVote
+                                )
+                                .sort((a, b) => b.votes - a.votes)}
                             value={
-                                MOCK_CANDIDATES.find(
-                                    (candidate) => candidate.id === selectedVote
+                                candidates.find(
+                                    (candidate) =>
+                                        candidate._id === selectedVote
                                 ) || null
                             }
-                            onChange={(value) => handleChange(index, value.id)}
+                            onChange={(value) => handleChange(index, value._id)}
                         />
                     </div>
                 ))}
