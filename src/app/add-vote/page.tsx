@@ -1,10 +1,13 @@
-"use client"; // Mark the component for client-side execution in Next.js 13
+"use client";
 
+import { useRouter } from "next/navigation";
 import { Select } from "@/components/Select";
 import { useState } from "react";
 import { MOCK_CANDIDATES } from "../page";
 
 export default function AddVote() {
+    const router = useRouter();
+
     // State to store the selected votes for each dropdown
     const [votes, setVotes] = useState<(number | null)[]>(Array(4).fill(null));
 
@@ -21,8 +24,9 @@ export default function AddVote() {
     // Function to handle form submission
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        // Process form submission here (e.g., send data to backend)
-        alert("Votes submitted: " + votes.join(", "));
+
+        // go to "/otp-verification" page
+        router.push("/otp-verification");
     };
 
     return (

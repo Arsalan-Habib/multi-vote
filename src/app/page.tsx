@@ -11,8 +11,8 @@ export const MOCK_CANDIDATES = [
 
 export default function Home() {
     return (
-        <div className='container mx-auto max-w-sm px-3'>
-            <h1 className='text-2xl font-bold text-center my-8'>
+        <div className='container mx-auto pt-12 px-3 max-w-sm'>
+            <h1 className='text-3xl font-bold mb-12 text-center'>
                 Top Candidates
             </h1>
             <div className='grid grid-cols-1 gap-4 mb-8'>
