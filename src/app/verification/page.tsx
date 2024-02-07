@@ -67,12 +67,12 @@ const OtpVerification = () => {
     };
 
     return (
-        <div className='container mx-auto pt-12 px-3 max-w-sm relative'>
-            <div className='mb-12'>
+        <div className='container mx-auto pt-8 px-3 max-w-sm relative'>
+            <div className='mb-8'>
                 {/* Back button */}
                 <button
                     onClick={() => router.back()}
-                    className='absolute top-11 left-2 text-gray-500 border-gray-500 border-2 rounded-lg px-1 py-0 hover:bg-gray-100'
+                    className='absolute top-8 left-2 text-gray-500 border-gray-500 border-2 rounded-lg px-1 py-0 hover:bg-gray-100'
                 >
                     <ChevronLeftIcon className='h-9 w-9 inline -mr-1' />
                 </button>
