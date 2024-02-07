@@ -14,7 +14,7 @@ export const sendOTP = async (to) => {
         .services(serviceId)
         .verifications.create({
             to: phoneNumber,
-            channel: "whatsapp",
+            channel: "sms",
         });
     return verification;
 };
