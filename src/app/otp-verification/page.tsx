@@ -1,10 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const OtpVerification = () => {
+    const router = useRouter();
+
     const [phoneNumber, setPhoneNumber] = useState<string>("");
     const [otp, setOtp] = useState<string>("");
     const [otpSent, setOtpSent] = useState<boolean>(false);
@@ -27,8 +30,54 @@ const OtpVerification = () => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log("Verifying OTP:", otp);
-        toast.success("OTP verified successfully!");
+
+        // retrieving votes from local storage
+        const votes = JSON.parse(localStorage.getItem("votes") || "[]");
+
+        if (votes.length < 4) {
+            toast.error("Please select candidates to vote for first.");
+            router.push("/add-vote");
+            return;
+        }
+
+        // Prepare the body of the POST request
+        const body = {
+            voter: phoneNumber,
+            applicants: votes,
+        };
+
+        try {
+            // Send the votes to the server
+            const response = await fetch("/api/vote", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(body),
+            });
+
+            // Check if the request was successful
+            if (response.ok) {
+                const data = await response.json();
+                console.log("Server response:", data);
+                toast.success("Vote submitted successfully! Thank You!");
+                // Optionally reset the state or redirect the user
+                setPhoneNumber("");
+                setOtp("");
+                // Clear votes from localStorage
+                localStorage.removeItem("votes");
+                // Redirect or update UI as needed
+                router.push("/");
+            } else {
+                // Handle server errors or invalid responses
+                const errorData = await response.json();
+                toast.error(`Error submitting vote: ${errorData.message}`);
+            }
+        } catch (error) {
+            // Handle network errors
+            console.error("Failed to submit vote:", error);
+            toast.error("Network error, please try again.");
+        }
     };
 
     return (

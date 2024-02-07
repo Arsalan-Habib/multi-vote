@@ -4,7 +4,11 @@ import Vote from "../../../models/Vote";
 export async function POST(req) {
     await dbConnect();
 
-    const { voter, applicants } = req.body;
+    const body = await req.json();
+
+    console.log("body", body);
+
+    const { voter, applicants } = body;
 
     if (!voter || !applicants || applicants.length !== 4) {
         return new Response(

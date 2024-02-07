@@ -38,6 +38,9 @@ export default function AddVote() {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
+        // save the votes to the local storage
+        localStorage.setItem("votes", JSON.stringify(votes));
+
         // go to "/otp-verification" page
         router.push("/otp-verification");
     };
