@@ -3,12 +3,8 @@ import { sendOTP } from "../../../utils/otp.js";
 export async function POST(req) {
     try {
         const body = await req.json();
-
         const { to } = body;
-
         const verification = await sendOTP(to);
-
-        console.log("verification", verification);
 
         return new Response(
             JSON.stringify({

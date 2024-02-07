@@ -12,7 +12,6 @@ export default function Home() {
         const fetchData = async () => {
             const response = await fetch("/api");
             const data = await response.json();
-            console.log("response", data);
             setCandidates(data); // Assuming the API returns an array of candidates
         };
 
