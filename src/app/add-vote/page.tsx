@@ -21,8 +21,10 @@ export default function AddVote() {
         fetchData();
     }, []);
 
+    const defaultVotes = Array(4).fill(null);
+
     // State to store the selected votes for each dropdown
-    const [votes, setVotes] = useState<(string | null)[]>(Array(4).fill(null));
+    const [votes, setVotes] = useState<(string | null)[]>(defaultVotes);
 
     // Function to handle changing votes
     const handleChange = (index: number, value: string) => {
@@ -41,9 +43,20 @@ export default function AddVote() {
         // save the votes to the local storage
         localStorage.setItem("votes", JSON.stringify(votes));
 
-        // go to "/otp-verification" page
-        router.push("/otp-verification");
+        // go to "/verification" page
+        router.push("/verification");
     };
+
+    // populating the votes from local storage on page load.
+    useEffect(() => {
+        const votes = JSON.parse(localStorage.getItem("votes") || "[]");
+
+        if (!votes.length) {
+            return;
+        }
+
+        setVotes(votes);
+    }, []);
 
     return (
         <div className='container mx-auto pt-12 px-3 max-w-sm relative'>

@@ -44,7 +44,7 @@ export default function Home() {
                 </Link>
                 <Link
                     className='px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition duration-300 w-full text-center'
-                    href='/update-vote'
+                    href='/add-vote'
                 >
                     Update Vote
                 </Link>
