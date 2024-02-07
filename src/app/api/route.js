@@ -31,6 +31,9 @@ export async function GET() {
             };
         });
 
+        // Sort applicants by votes in descending order
+        applicantsWithVotes.sort((a, b) => b.votes - a.votes);
+
         return new Response(JSON.stringify(applicantsWithVotes), {
             status: 200,
             headers: { "Content-Type": "application/json" },
