@@ -15,9 +15,21 @@ const OtpVerification = () => {
     const [cooldownMessage, setCooldownMessage] = useState<string>("");
 
     const handleSendOtp = async () => {
-        console.log("Sending OTP to", phoneNumber);
         setOtpSent(true);
-        toast.info("OTP has been sent.");
+
+        // Send the OTP to the user's phone number
+        // Send the votes to the server
+        const response = await fetch("/api/send-otp", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                to: "+" + phoneNumber.toString(),
+            }),
+        });
+
+        toast.info("OTP has been sent to " + phoneNumber.toString());
         setIsButtonDisabled(true);
         setCooldownMessage("Please wait 15 seconds before sending OTP again.");
 
@@ -40,6 +52,18 @@ const OtpVerification = () => {
             return;
         }
 
+        // verifying OTP
+        const response = await fetch("/api/verify-otp", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                to: "+" + phoneNumber.toString(),
+                code: otp.toString(),
+            }),
+        });
+
         // Prepare the body of the POST request
         const body = {
             voter: phoneNumber,
@@ -59,15 +83,19 @@ const OtpVerification = () => {
             // Check if the request was successful
             if (response.ok) {
                 const data = await response.json();
-                console.log("Server response:", data);
-                toast.success("Vote submitted successfully! Thank You!");
-                // Optionally reset the state or redirect the user
-                setPhoneNumber("");
-                setOtp("");
-                // Clear votes from localStorage
-                localStorage.removeItem("votes");
-                // Redirect or update UI as needed
-                router.push("/");
+                toast.success(
+                    "Vote submitted successfully! Thank You! \n Redirecting to home page..."
+                );
+
+                setTimeout(() => {
+                    // Optionally reset the state or redirect the user
+                    setPhoneNumber("");
+                    setOtp("");
+                    // Clear votes from localStorage
+                    localStorage.removeItem("votes");
+                    // Redirect or update UI as needed
+                    router.push("/");
+                }, 6000);
             } else {
                 // Handle server errors or invalid responses
                 const errorData = await response.json();
@@ -144,7 +172,11 @@ const OtpVerification = () => {
                     </div>
                     <button
                         type='submit'
-                        className='py-2 px-4 bg-green-500 text-white rounded hover:bg-green-700 w-full mb-12'
+                        className={
+                            !otpSent || otp.toString().length < 4
+                                ? "py-2 px-4 bg-gray-300 text-gray-200 rounded w-full mb-4"
+                                : "py-2 px-4 bg-green-500 text-white rounded hover:bg-green-700 w-full mb-12"
+                        }
                         disabled={!otpSent || !otp}
                     >
                         Verify OTP
