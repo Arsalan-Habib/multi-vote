@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { Select } from "@/components/Select";
 import { useEffect, useState } from "react";
 import { Candidate } from "@/types";
+import { ChevronLeftIcon } from "@heroicons/react/20/solid";
 
 export default function AddVote() {
     const router = useRouter();
@@ -45,8 +46,17 @@ export default function AddVote() {
     };
 
     return (
-        <div className='container mx-auto pt-12 px-3 max-w-sm'>
-            <h1 className='text-3xl font-bold mb-12 text-center'>Add Vote</h1>
+        <div className='container mx-auto pt-12 px-3 max-w-sm relative'>
+            <div className='mb-12'>
+                {/* Back button */}
+                <button
+                    onClick={() => router.back()}
+                    className='absolute top-11 left-2 text-gray-500 border-gray-500 border-2 rounded-lg px-1 py-0 hover:bg-gray-100'
+                >
+                    <ChevronLeftIcon className='h-9 w-9 inline -mr-1' />
+                </button>
+                <h1 className='text-3xl font-bold text-center'>Add Vote</h1>
+            </div>
             <h2 className='text-lg font-semibold mb-8'>
                 You get 4 votes, and you can only vote for a candidate once.
             </h2>
