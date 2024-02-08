@@ -35,7 +35,7 @@ const Leaderboard = ({
                                 "text-lg " +
                                 (index < highlightCount
                                     ? "font-semibold text-gray-900"
-                                    : "font-medium text-gray-700")
+                                    : "font-medium text-gray-800")
                             }
                         >
                             {index + 1}. &nbsp;
@@ -45,8 +45,8 @@ const Leaderboard = ({
                                 className={
                                     "text-lg capitalize " +
                                     (index < highlightCount
-                                        ? "font-medium text-gray-800"
-                                        : "font-light text-gray-600")
+                                        ? "font-semibold text-gray-900"
+                                        : "font-normal text-gray-800")
                                 }
                             >
                                 {candidate.name}
@@ -55,12 +55,21 @@ const Leaderboard = ({
                                 className={
                                     "text-lg " +
                                     (index < highlightCount
-                                        ? "font-medium text-gray-800 "
-                                        : "font-light text-gray-600")
+                                        ? "font-semibold text-gray-900 "
+                                        : "font-normal text-gray-800")
                                 }
                             >
                                 {candidate.votes}{" "}
-                                <span className='text-base'>votes</span>
+                                <span
+                                    className={
+                                        "text-base " +
+                                        (index < highlightCount
+                                            ? "font-medium text-gray-900 "
+                                            : "font-light text-gray-800")
+                                    }
+                                >
+                                    votes
+                                </span>
                             </p>
                         </div>
                     </li>
