@@ -148,8 +148,10 @@ export function SelectWithSearch({
                                                                     : "font-light")
                                                             }
                                                         >
-                                                            Google sheets row
-                                                            #10
+                                                            Google sheets row #
+                                                            {
+                                                                candidate.googleSheetsRowNumber
+                                                            }
                                                         </p>
                                                     </div>
                                                     <p className='font-semibold text-gray-900 text-lg text-left'>
