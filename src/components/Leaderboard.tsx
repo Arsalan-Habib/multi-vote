@@ -53,9 +53,9 @@ const Leaderboard = ({
                             </h3>
                             <p
                                 className={
-                                    "text-lg " +
+                                    "text-lg text-right pr-8 " +
                                     (index < highlightCount
-                                        ? "font-semibold text-gray-900 "
+                                        ? "font-medium text-gray-900 "
                                         : "font-normal text-gray-800")
                                 }
                             >
@@ -64,7 +64,7 @@ const Leaderboard = ({
                                     className={
                                         "text-base " +
                                         (index < highlightCount
-                                            ? "font-medium text-gray-900 "
+                                            ? "font-normal text-gray-900 "
                                             : "font-light text-gray-800")
                                     }
                                 >
