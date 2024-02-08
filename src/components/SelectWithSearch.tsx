@@ -128,7 +128,7 @@ export function SelectWithSearch({
                                                     <div>
                                                         <p
                                                             className={
-                                                                "text-md " +
+                                                                "text-md capitalize " +
                                                                 (isSelected(
                                                                     candidate
                                                                 )
