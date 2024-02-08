@@ -20,7 +20,7 @@ export default function Home() {
             setLoading(false);
         };
 
-        const _hasVoted = localStorage.getItem("votes");
+        const _hasVoted = sessionStorage.getItem("hasVoted");
         if (_hasVoted) {
             setHasVoted(true);
         }
