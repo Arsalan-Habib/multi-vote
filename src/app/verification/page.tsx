@@ -24,13 +24,47 @@ const OtpVerification = () => {
             return;
         }
 
+        let trimmedPhoneNumber = phoneNumber.replace(/\s/g, "");
+
         // Prepare the body of the POST request
         const body = {
-            voter: phoneNumber,
+            voter: trimmedPhoneNumber,
             applicants: votes,
         };
 
         try {
+            // first verifying the entered phone number is allowed to vote.
+            const voterVerificationResponse = await fetch(
+                "/api/verify-voter/" + trimmedPhoneNumber
+            );
+
+            if (!voterVerificationResponse.ok) {
+                // if status === 403, then the voter is not allowed to vote
+                if (voterVerificationResponse.status === 403) {
+                    toast.error(
+                        <div>
+                            Sorry, You are not allowed to vote.
+                            <br />
+                            Please use the number you are using in the B17 Fund
+                            Initiative Group.
+                            <br />
+                            If the problem persists, please contact the group
+                            admin.
+                        </div>,
+                        {
+                            autoClose: 15000,
+                        }
+                    );
+                    return;
+                } else {
+                    // if status === 500, then there is an error with the server
+                    toast.error(
+                        "Error verifying your number. Please try again later."
+                    );
+                    return;
+                }
+            }
+
             // Send the votes to the server
             const response = await fetch("/api/vote", {
                 method: "POST",
@@ -44,11 +78,21 @@ const OtpVerification = () => {
             if (response.ok) {
                 const data = await response.json();
                 toast.success(
-                    "Vote submitted successfully! Thank You! \n Redirecting to home page..."
+                    <div>
+                        Vote cast successfully!
+                        <br />
+                        Thank You for being part of this initiative!
+                        <br />
+                        Redirecting to Home page.
+                    </div>
                 );
 
                 setTimeout(() => {
                     setPhoneNumber("");
+
+                    // Set hasVoted to true in sessionStorage
+                    sessionStorage.setItem("hasVoted", "true");
+
                     // Clear votes from localStorage
                     localStorage.removeItem("votes");
                     // Redirect or update UI as needed
