@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Select } from "@/components/Select";
+import { SelectWithSearch } from "@/components/SelectWithSearch";
 import { useEffect, useState } from "react";
 import { Candidate } from "@/types";
 import { ChevronLeftIcon } from "@heroicons/react/20/solid";
@@ -71,16 +71,18 @@ export default function AddVote() {
                 <h1 className='text-3xl font-bold text-center'>Add Vote</h1>
             </div>
             <h2 className='text-lg font-semibold mb-8'>
-                You get 4 votes, and you can only vote for a candidate once.
+                Each member gets 4 votes, and you can only vote for a candidate
+                once.
             </h2>
+
             <form
                 onSubmit={handleSubmit}
                 className='flex flex-col justify-center'
             >
                 {votes.map((selectedVote, index) => (
                     <div key={index} className='mb-6'>
-                        <Select
-                            label={`Vote #${index + 1}`}
+                        <SelectWithSearch
+                            title={`Vote #${index + 1}`}
                             options={candidates
                                 .filter(
                                     (candidate) =>

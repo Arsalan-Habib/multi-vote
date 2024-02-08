@@ -32,7 +32,6 @@ export const Select = ({
                             <span className='flex items-center'>
                                 <span className='ml-3 block truncate'>
                                     {value ? value.name : "Select a candidate"}{" "}
-                                    {/* Display placeholder or selected value */}
                                 </span>
                             </span>
                             <span className='pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2'>
