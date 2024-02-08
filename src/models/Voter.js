@@ -8,4 +8,4 @@ const voterSchema = new mongoose.Schema({
     },
 });
 
-export default mongoose.model("Voter", voterSchema);
+export default mongoose.models.Voter || mongoose.model("Voter", voterSchema);
