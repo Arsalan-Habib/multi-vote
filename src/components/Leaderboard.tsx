@@ -12,8 +12,8 @@ const Leaderboard = ({
 }) => {
     return (
         <div className='bg-white shadow-md min-w-full'>
-            <div className='bg-gray-300 py-2 px-4 z-10'>
-                <h2 className='text-xl font-semibold text-gray-800 text-center'>
+            <div className='py-2 px-4 z-10 bg-gray-200'>
+                <h2 className='text-xl font-medium text-gray-800 text-center'>
                     Candidate Leaderboard
                 </h2>
             </div>
@@ -32,34 +32,35 @@ const Leaderboard = ({
                     >
                         <span
                             className={
-                                "text-gray-700 text-lg " +
+                                "text-lg " +
                                 (index < highlightCount
-                                    ? "font-bold"
-                                    : "font-medium")
+                                    ? "font-semibold text-gray-900"
+                                    : "font-medium text-gray-700")
                             }
                         >
-                            #{index + 1} &nbsp;
+                            {index + 1}. &nbsp;
                         </span>
                         <div className='flex-1'>
                             <h3
                                 className={
-                                    "text-gray-800 text-lg " +
+                                    "text-lg capitalize " +
                                     (index < highlightCount
-                                        ? "font-bold"
-                                        : "font-medium")
+                                        ? "font-medium text-gray-800"
+                                        : "font-light text-gray-600")
                                 }
                             >
                                 {candidate.name}
                             </h3>
                             <p
                                 className={
-                                    "text-base" +
+                                    "text-lg " +
                                     (index < highlightCount
-                                        ? "font-medium text-gray-900 "
+                                        ? "font-medium text-gray-800 "
                                         : "font-light text-gray-600")
                                 }
                             >
-                                {candidate.votes} votes
+                                {candidate.votes}{" "}
+                                <span className='text-base'>votes</span>
                             </p>
                         </div>
                     </li>

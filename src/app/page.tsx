@@ -9,6 +9,7 @@ import Leaderboard from "@/components/Leaderboard";
 export default function Home() {
     const [candidates, setCandidates] = useState<Candidate[] | []>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    const [hasVoted, setHasVoted] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -19,12 +20,16 @@ export default function Home() {
             setLoading(false);
         };
 
+        const _hasVoted = localStorage.getItem("votes");
+        if (_hasVoted) {
+            setHasVoted(true);
+        }
         fetchData();
     }, []);
 
     return (
         <div className='container mx-auto pt-6 px-3 max-w-sm'>
-            <h1 className='text-3xl font-bold mb-4 text-center'>
+            <h1 className='text-3xl font-semibold mb-4 text-center'>
                 B17 Fund Voting
             </h1>
             {loading ? (
@@ -42,20 +47,17 @@ export default function Home() {
                             highlightCount={4}
                         />
                     </div>
-                    <div className='flex justify-between gap-4'>
-                        <Link
-                            href='/add-vote'
-                            className='px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300 w-full text-center'
-                        >
-                            Add Vote
-                        </Link>
-                        <Link
-                            className='px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition duration-300 w-full text-center'
-                            href='/add-vote'
-                        >
-                            Update Vote
-                        </Link>
-                    </div>
+                    <Link
+                        href='/add-vote'
+                        className={
+                            "px-6 py-2  text-white rounded  transition duration-300 w-full text-center block " +
+                            (hasVoted
+                                ? "bg-green-500 hover:bg-green-700"
+                                : "bg-blue-500 hover:bg-blue-700")
+                        }
+                    >
+                        {hasVoted ? "Update Vote" : "Add Vote"}
+                    </Link>
                 </>
             )}
         </div>
