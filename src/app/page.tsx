@@ -37,7 +37,7 @@ export default function Home() {
                     className='flex justify-center items-center mb-8'
                     style={{ height: "500px" }}
                 >
-                    <ClipLoader color='#666666' loading={loading} size={50} />{" "}
+                    <ClipLoader color='#666666' loading={loading} size={50} />
                 </div>
             ) : (
                 <>

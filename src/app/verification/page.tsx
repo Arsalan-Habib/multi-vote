@@ -1,47 +1,60 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ChevronLeftIcon } from "@heroicons/react/20/solid";
+import { ClipLoader } from "react-spinners";
 
 const OtpVerification = () => {
     const router = useRouter();
 
     const [phoneNumber, setPhoneNumber] = useState<string>("");
     const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    // Get votes from localStorage or redirect to select candidates page.
+    const getVotesOrRedirect = (): string[] | null => {
+        const votes = JSON.parse(localStorage.getItem("votes") || "[]");
+        if (votes.length < 4) {
+            toast.error(
+                "Please select candidates to vote for first. Redirecting to select candidates page.",
+                {
+                    autoClose: 3000,
+                }
+            );
+            setTimeout(() => router.push("/add-vote"), 3000);
+            return null;
+        }
+        return votes;
+    };
+
+    // util function to reset UI state.
+    const resetUIState = (isLoading = false, isButtonDisabled = false) => {
+        setIsLoading(isLoading);
+        setIsButtonDisabled(isButtonDisabled);
+    };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        // retrieving votes from local storage
-        const votes = JSON.parse(localStorage.getItem("votes") || "[]");
+        setIsButtonDisabled(true);
+        setIsLoading(true);
 
-        if (votes.length < 4) {
-            toast.error("Please select candidates to vote for first.");
-            router.push("/add-vote");
-            return;
-        }
+        const votes = getVotesOrRedirect();
+        if (!votes) return;
 
         let trimmedPhoneNumber = phoneNumber.replace(/\s/g, "");
-
-        // Prepare the body of the POST request
-        const body = {
-            voter: trimmedPhoneNumber,
-            applicants: votes,
-        };
+        const body = { voter: trimmedPhoneNumber, applicants: votes };
 
         try {
-            // first verifying the entered phone number is allowed to vote.
             const voterVerificationResponse = await fetch(
-                "/api/verify-voter/" + trimmedPhoneNumber
+                `/api/verify-voter/${trimmedPhoneNumber}`
             );
-
             if (!voterVerificationResponse.ok) {
-                // if status === 403, then the voter is not allowed to vote
-                if (voterVerificationResponse.status === 403) {
-                    toast.error(
+                const errorMessage =
+                    voterVerificationResponse.status === 403 ? (
                         <div>
                             Sorry, You are not allowed to vote.
                             <br />
@@ -50,65 +63,58 @@ const OtpVerification = () => {
                             <br />
                             If the problem persists, please contact the group
                             admin.
-                        </div>,
-                        {
-                            autoClose: 15000,
-                        }
-                    );
-                    return;
-                } else {
-                    // if status === 500, then there is an error with the server
-                    toast.error(
+                        </div>
+                    ) : (
                         "Error verifying your number. Please try again later."
                     );
-                    return;
-                }
+                toast.error(errorMessage, {
+                    autoClose:
+                        voterVerificationResponse.status === 403 ? 15000 : 5000,
+                });
+                resetUIState();
+                return;
             }
 
-            // Send the votes to the server
             const response = await fetch("/api/vote", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body),
             });
 
-            // Check if the request was successful
-            if (response.ok) {
-                const data = await response.json();
-                toast.success(
-                    <div>
-                        Vote cast successfully!
-                        <br />
-                        Thank You for being part of this initiative!
-                        <br />
-                        Redirecting to Home page.
-                    </div>
-                );
-
-                setTimeout(() => {
-                    setPhoneNumber("");
-
-                    // Set hasVoted to true in sessionStorage
-                    sessionStorage.setItem("hasVoted", "true");
-
-                    // Clear votes from localStorage
-                    localStorage.removeItem("votes");
-                    // Redirect or update UI as needed
-                    router.push("/");
-                }, 6000);
-            } else {
-                // Handle server errors or invalid responses
+            if (!response.ok) {
                 const errorData = await response.json();
                 toast.error(`Error submitting vote: ${errorData.message}`);
+                resetUIState();
+                return;
             }
+
+            toast.success(
+                <div>
+                    Vote cast successfully!
+                    <br />
+                    Thank You for being part of this initiative!
+                    <br />
+                    Redirecting to Home page.
+                </div>
+            );
+            setIsLoading(false);
+            setTimeout(() => {
+                setPhoneNumber("");
+                sessionStorage.setItem("hasVoted", "true");
+                localStorage.removeItem("votes");
+                resetUIState();
+                router.push("/");
+            }, 6000);
         } catch (error) {
-            // Handle network errors
             console.error("Failed to submit vote:", error);
             toast.error("Network error, please try again.");
+            resetUIState();
         }
     };
+
+    useEffect(() => {
+        getVotesOrRedirect();
+    }, []);
 
     return (
         <div className='container mx-auto pt-8 px-3 max-w-sm relative'>
@@ -147,13 +153,25 @@ const OtpVerification = () => {
                 <button
                     type='submit'
                     className={
-                        isButtonDisabled || phoneNumber.toString().length < 11
-                            ? "py-2 px-4 bg-gray-300 text-gray-200 rounded w-full mb-4"
-                            : "py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-700 w-full mb-4"
+                        "w-full mb-4 py-2 px-4 rounded flex justify-center " +
+                        (isButtonDisabled || phoneNumber.toString().length < 11
+                            ? "bg-gray-300 text-gray-50"
+                            : "bg-blue-500 text-white hover:bg-blue-700")
                     }
-                    disabled={!phoneNumber || isButtonDisabled}
+                    disabled={!phoneNumber || isButtonDisabled || isLoading}
                 >
-                    Submit Vote
+                    {
+                        // Show loading spinner if the form is being submitted
+                        isLoading ? (
+                            <ClipLoader
+                                color='#FFFFFF'
+                                loading={isLoading}
+                                size={24}
+                            />
+                        ) : (
+                            "Submit Vote"
+                        )
+                    }
                 </button>
             </form>
             <ToastContainer
