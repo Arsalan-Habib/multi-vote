@@ -43,7 +43,7 @@ export function SelectWithSearch({
             >
                 <p
                     className={
-                        "truncate " +
+                        "truncate capitalize " +
                         (value
                             ? "text-gray-900 font-medium"
                             : "text-gray-500 font-light")
