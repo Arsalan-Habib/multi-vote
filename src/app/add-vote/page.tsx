@@ -13,7 +13,9 @@ export default function AddVote() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch("/api");
+            const response = await fetch("/api", {
+                cache: "no-store",
+            });
             const { data } = await response.json();
             setCandidates(data);
         };

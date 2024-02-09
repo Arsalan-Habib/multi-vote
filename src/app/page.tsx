@@ -14,7 +14,9 @@ export default function Home() {
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
-            const response = await fetch("/api");
+            const response = await fetch("/api", {
+                cache: "no-store",
+            });
             const { data } = await response.json();
             setCandidates(data);
             setLoading(false);

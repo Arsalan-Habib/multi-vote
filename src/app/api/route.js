@@ -2,8 +2,8 @@ import Applicant from "../../models/Applicant";
 import Vote from "../../models/Vote"; // Make sure you import the Vote model
 import { dbConnect } from "../../utils/dbConnect";
 
-// Invalidates the cache every 2 seconds
-export const revalidate = 2;
+// Forces no cache use.
+export const revalidate = 0;
 
 export async function GET(request) {
     try {
