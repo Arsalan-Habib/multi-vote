@@ -169,7 +169,7 @@ const OtpVerification = () => {
                                 size={24}
                             />
                         ) : (
-                            "Submit Vote"
+                            "Verify Phone Number"
                         )
                     }
                 </button>
