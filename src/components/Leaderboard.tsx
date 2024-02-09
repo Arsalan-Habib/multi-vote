@@ -40,10 +40,10 @@ const Leaderboard = ({
                         >
                             {index + 1}. &nbsp;
                         </span>
-                        <div className='flex-1'>
+                        <div className='flex-1 pt-[3px]'>
                             <h3
                                 className={
-                                    "text-lg capitalize " +
+                                    "text-lg capitalize leading-tight " +
                                     (index < highlightCount
                                         ? "font-semibold text-gray-900"
                                         : "font-normal text-gray-800")
@@ -51,26 +51,39 @@ const Leaderboard = ({
                             >
                                 {candidate.name}
                             </h3>
-                            <p
-                                className={
-                                    "text-lg text-right pr-8 " +
-                                    (index < highlightCount
-                                        ? "font-medium text-gray-900 "
-                                        : "font-normal text-gray-800")
-                                }
-                            >
-                                {candidate.votes}{" "}
-                                <span
+                            <div className='flex items-center justify-between'>
+                                <p
                                     className={
-                                        "text-base " +
+                                        "text-sm text-right " +
                                         (index < highlightCount
                                             ? "font-normal text-gray-900 "
                                             : "font-light text-gray-800")
                                     }
                                 >
-                                    votes
-                                </span>
-                            </p>
+                                    Google sheets row #
+                                    {candidate.googleSheetsRowNumber}
+                                </p>
+                                <p
+                                    className={
+                                        "text-lg text-right pr-8 " +
+                                        (index < highlightCount
+                                            ? "font-medium text-gray-900 "
+                                            : "font-normal text-gray-800")
+                                    }
+                                >
+                                    {candidate.votes}{" "}
+                                    <span
+                                        className={
+                                            "text-base " +
+                                            (index < highlightCount
+                                                ? "font-normal text-gray-900 "
+                                                : "font-light text-gray-800")
+                                        }
+                                    >
+                                        votes
+                                    </span>
+                                </p>
+                            </div>
                         </div>
                     </li>
                 ))}
