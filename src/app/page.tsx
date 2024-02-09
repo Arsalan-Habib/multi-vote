@@ -15,7 +15,7 @@ export default function Home() {
         const fetchData = async () => {
             setLoading(true);
             const response = await fetch("/api");
-            const data = await response.json();
+            const { data } = await response.json();
             setCandidates(data);
             setLoading(false);
         };

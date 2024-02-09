@@ -14,7 +14,7 @@ export default function AddVote() {
     useEffect(() => {
         const fetchData = async () => {
             const response = await fetch("/api");
-            const data = await response.json();
+            const { data } = await response.json();
             setCandidates(data);
         };
 

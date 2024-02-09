@@ -2,8 +2,11 @@ import Applicant from "../../models/Applicant";
 import Vote from "../../models/Vote"; // Make sure you import the Vote model
 import { dbConnect } from "../../utils/dbConnect";
 
-export async function GET() {
+export async function GET(request) {
     try {
+        console.log(`Request IP`, request?.ip);
+        console.log("Request geo information", request?.geo);
+
         await dbConnect();
 
         // Aggregate votes for each applicant
@@ -34,9 +37,9 @@ export async function GET() {
         // Sort applicants by votes in descending order
         applicantsWithVotes.sort((a, b) => b.votes - a.votes);
 
-        return new Response(JSON.stringify(applicantsWithVotes), {
-            status: 200,
-            headers: { "Content-Type": "application/json" },
+        return Response.json({
+            success: true,
+            data: applicantsWithVotes,
         });
     } catch (error) {
         console.error(error);
