@@ -1,40 +1,16 @@
 import { useEffect, useState, useMemo } from "react";
 
 export default (futureTime: number) => {
-  const [timeFinished, setTimeFinished] = useState<boolean>(
-    futureTime < Date.now()
-  );
+  const [timeFinished, setTimeFinished] = useState<boolean>(false);
   const [timeLeft, setTimeLeft] = useState<{
     days: number;
     hours: number;
     minutes: number;
     seconds: number;
-  }>(getTimeLeft(futureTime - Date.now()));
+  }>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
-    const now = Date.now();
-    if (futureTime && now < futureTime) {
-      setTimeLeft(
-        getTimeLeft(futureTime - now) ?? {
-          days: 0,
-          hours: 0,
-          minutes: 0,
-          seconds: 0,
-        }
-      );
-      setTimeFinished(false);
-    } else {
-      setTimeFinished(true);
-      setTimeLeft(
-        getTimeLeft(futureTime - now) ?? {
-          days: 0,
-          hours: 0,
-          minutes: 0,
-          seconds: 0,
-        }
-      );
-    }
-    const interval = setInterval(() => {
+    if (typeof window !== 'undefined') {
       const now = Date.now();
       if (futureTime && now < futureTime) {
         setTimeLeft(
@@ -56,13 +32,37 @@ export default (futureTime: number) => {
             seconds: 0,
           }
         );
-        clearInterval(interval);
       }
-    }, 1000);
+      const interval = setInterval(() => {
+        const now = Date.now();
+        if (futureTime && now < futureTime) {
+          setTimeLeft(
+            getTimeLeft(futureTime - now) ?? {
+              days: 0,
+              hours: 0,
+              minutes: 0,
+              seconds: 0,
+            }
+          );
+          setTimeFinished(false);
+        } else {
+          setTimeFinished(true);
+          setTimeLeft(
+            getTimeLeft(futureTime - now) ?? {
+              days: 0,
+              hours: 0,
+              minutes: 0,
+              seconds: 0,
+            }
+          );
+          clearInterval(interval);
+        }
+      }, 1000);
 
-    return () => {
-      clearInterval(interval);
-    };
+      return () => {
+        clearInterval(interval);
+      };
+    }
   }, [futureTime]);
 
   return useMemo(() => ({ timeFinished, timeLeft }), [timeFinished, timeLeft]);
