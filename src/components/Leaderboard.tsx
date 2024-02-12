@@ -15,7 +15,7 @@ const Leaderboard = ({
       <div className="py-2 px-4 z-10 bg-gray-200">
         <h2 className="text-xl font-medium text-gray-800 text-center">Candidate Leaderboard</h2>
       </div>
-      <ul className="divide-y divide-gray-200 overflow-y-scroll" style={{ maxHeight: "480px" }}>
+      <ul className="divide-y divide-gray-200 overflow-y-scroll" style={{ maxHeight: "420px" }}>
         {" "}
         {candidates.slice(0, limit).map((candidate, index) => (
           <li

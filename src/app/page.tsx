@@ -12,16 +12,27 @@ export default function Home() {
   const [candidates, setCandidates] = useState<Candidate[] | []>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [hasVoted, setHasVoted] = useState<boolean>(false);
+  const [totalVoter, setTotalVoter] = useState(0);
+  const [votesCollected, setVotesCollected] = useState(0);
   const { timeFinished, timeLeft } = useCountdownTimer(votingEndTime);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+
       const response = await fetch("/api", {
         cache: "no-store",
       });
       const { data } = await response.json();
       setCandidates(data);
+
+      const responseVotingDetails = await fetch("/api/vote", {
+        cache: "no-store",
+      });
+      const votingDetails = await responseVotingDetails.json();
+      setTotalVoter(votingDetails.data.totalVoterCount);
+      setVotesCollected(votingDetails.data.totalVotesCollected);
+
       setLoading(false);
     };
 
@@ -32,14 +43,34 @@ export default function Home() {
     fetchData();
   }, []);
 
-  const style = {
-    padding: "20px",
-    display: "inline",
-  };
-
   return (
     <div className="container mx-auto pt-6 px-3 max-w-sm">
-      <h1 className="text-3xl font-semibold mb-4 text-center">B17 Fund Voting</h1>
+      <h1 className="text-3xl font-semibold mb-2 text-center">B17 Fund Voting</h1>
+      {!timeFinished && (
+        <>
+          <div className="flex items-center justify-center gap-2 mb-2 font-medium" style={{ color: "grey" }}>
+            <div className="font-medium">Voting Ends in: </div>
+            <div className="text-black">
+              <span>{timeLeft.hours}</span>h
+            </div>
+            <div className="text-black">
+              <span>{timeLeft.minutes}</span>m
+            </div>
+            <div className="text-black">
+              <span>{timeLeft.seconds}</span>s
+            </div>
+          </div>
+
+          <div className="flex items-center justify-center gap-2 mb-4 font-medium" style={{ color: "grey" }}>
+            <div className="font-medium">
+              Votes Collected:&nbsp;
+              <span className="text-black">
+                {votesCollected}/{totalVoter}
+              </span>
+            </div>
+          </div>
+        </>
+      )}
       {loading ? (
         <div className="flex justify-center items-center mb-8" style={{ height: "500px" }}>
           <ClipLoader color="#666666" loading={loading} size={50} />
@@ -58,17 +89,6 @@ export default function Home() {
           >
             {hasVoted ? "Update Vote" : "Add Vote"}
           </Link>
-        </>
-      )}
-
-      {!timeFinished && (
-        <>
-          <div className="flex items-center justify-center mt-4 font-bold">Voting Ends in</div>
-          <div className="flex items-center justify-between mt-4 font-medium">
-            <div>{timeLeft.hours} hours </div>
-            <div>{timeLeft.minutes} minutes </div>
-            <div>{timeLeft.seconds} seconds</div>
-          </div>
         </>
       )}
     </div>
