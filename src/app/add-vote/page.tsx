@@ -43,9 +43,9 @@ export default function AddVote() {
 
   // Function to handle form submission
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    if (timeFinished) return;
-
     event.preventDefault();
+
+    if (timeFinished) return;
 
     // save the votes to the local storage
     localStorage.setItem("votes", JSON.stringify(votes));
@@ -99,7 +99,7 @@ export default function AddVote() {
           className={`mt-4 px-6 py-2 font-semibold rounded-lg ${
             isFormComplete ? "bg-blue-500 hover:bg-blue-600 text-white" : "bg-gray-200 text-gray-400"
           }`}
-          disabled={!isFormComplete && !timeFinished}
+          disabled={!isFormComplete || timeFinished}
         >
           {timeFinished ? "Voting Finished" : "Submit Votes"}
         </button>
