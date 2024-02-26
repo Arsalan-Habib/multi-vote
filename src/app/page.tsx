@@ -51,6 +51,9 @@ export default function Home() {
           <div className="flex items-center justify-center gap-2 mb-2 font-medium" style={{ color: "grey" }}>
             <div className="font-medium">Voting Ends in: </div>
             <div className="text-black">
+              <span>{timeLeft.days}</span>d
+            </div>
+            <div className="text-black">
               <span>{timeLeft.hours}</span>h
             </div>
             <div className="text-black">
