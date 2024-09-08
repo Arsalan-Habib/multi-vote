@@ -1,5 +1,6 @@
 import { Candidate } from "@/types";
 import React from "react";
+import { CommentsModal } from "./ReviewsModal";
 
 const Leaderboard = ({
   candidates,
@@ -46,7 +47,9 @@ const Leaderboard = ({
                   }
                 >
                   Google sheets row #{candidate.googleSheetsRowNumber}
+                  <CommentsModal comments={candidate.reviewComments} />
                 </p>
+
                 <p
                   className={
                     "text-lg text-right pr-8 " +
